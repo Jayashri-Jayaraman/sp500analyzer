@@ -45,7 +45,6 @@ from src.sectors import (
     sector_weight_by_price,
 )
 
-
 #  Page config
 
 st.set_page_config(
@@ -94,8 +93,8 @@ COLOR_PALETTE: list[str] = [
 ]
 
 
-
 #  Data loading (cached)
+
 
 @st.cache_data
 def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -115,6 +114,7 @@ sector_map: pd.Series = get_sector_series()
 
 #  Helper: safe defaults for multiselect
 
+
 def safe_defaults(candidates: list[str], available: list[str]) -> list[str]:
     """Filter default tickers to only those present in the data."""
     result = [t for t in candidates if t in available]
@@ -124,7 +124,6 @@ def safe_defaults(candidates: list[str], available: list[str]) -> list[str]:
 
 
 available_tickers: list[str] = list(prices.columns)
-
 
 
 #  Sidebar
@@ -145,8 +144,8 @@ st.sidebar.caption(
 )
 
 
-
 #  Helper: metric card
+
 
 def metric_card(label: str, value: str) -> str:
     return (
@@ -157,8 +156,8 @@ def metric_card(label: str, value: str) -> str:
     )
 
 
-
 #  Helper: safe style formatting (no matplotlib needed)
+
 
 def format_stats_table(stats: pd.DataFrame) -> pd.io.formats.style.Styler:
     """Format the summary stats table without background_gradient to avoid matplotlib dependency."""
@@ -184,7 +183,6 @@ def try_gradient(styler: pd.io.formats.style.Styler, column: str) -> pd.io.forma
         return styler
 
 
-
 #  PAGE: Overview
 
 if page == "Overview":
@@ -201,13 +199,9 @@ if page == "Overview":
     cols[0].markdown(
         metric_card("Cumulative Return", f"{market_return:.1f}%"), unsafe_allow_html=True
     )
-    cols[1].markdown(
-        metric_card("Annualised Vol", f"{market_vol:.1f}%"), unsafe_allow_html=True
-    )
+    cols[1].markdown(metric_card("Annualised Vol", f"{market_vol:.1f}%"), unsafe_allow_html=True)
     cols[2].markdown(metric_card("Avg Sharpe", f"{avg_sharpe:.2f}"), unsafe_allow_html=True)
-    cols[3].markdown(
-        metric_card("Avg Max Drawdown", f"{avg_mdd:.1f}%"), unsafe_allow_html=True
-    )
+    cols[3].markdown(metric_card("Avg Max Drawdown", f"{avg_mdd:.1f}%"), unsafe_allow_html=True)
 
     st.markdown("---")
 
@@ -246,7 +240,6 @@ if page == "Overview":
     st.dataframe(styled, use_container_width=True, height=600)
 
 
-
 #  PAGE: Volatility
 
 elif page == "Volatility":
@@ -259,9 +252,7 @@ elif page == "Volatility":
         vol_tickers: list[str] = st.multiselect(
             "Tickers",
             available_tickers,
-            default=safe_defaults(
-                ["AAPL", "MSFT", "NVDA", "XOM", "JPM"], available_tickers
-            ),
+            default=safe_defaults(["AAPL", "MSFT", "NVDA", "XOM", "JPM"], available_tickers),
             key="vol_tickers",
         )
 
@@ -313,7 +304,6 @@ elif page == "Volatility":
         showlegend=False,
     )
     st.plotly_chart(fig_bar, use_container_width=True)
-
 
 
 #  PAGE: Correlations
@@ -394,7 +384,6 @@ elif page == "Correlations":
                 {"pair": [f"{a} / {b}" for a, b in top.index], "corr": top.values}
             ).style.format({"corr": "{:.3f}"})
         )
-
 
 
 #  PAGE: Sectors
@@ -507,9 +496,7 @@ elif page == "Risk Metrics":
 
         # Risk table
         st.subheader("Risk Summary")
-        risk_stats: pd.DataFrame = summary_stats(
-            returns[risk_tickers], prices[risk_tickers]
-        )
+        risk_stats: pd.DataFrame = summary_stats(returns[risk_tickers], prices[risk_tickers])
         risk_stats["sector"] = risk_stats.index.map(SECTOR_MAP)
         st.dataframe(
             format_stats_table(risk_stats),

@@ -10,8 +10,8 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-
 #  Rolling volatility
+
 
 def rolling_volatility(
     returns: pd.DataFrame,
@@ -49,8 +49,8 @@ def ewm_volatility(
     return vol
 
 
-
 #  Correlation
+
 
 def correlation_matrix(returns: pd.DataFrame) -> pd.DataFrame:
     """Full-period pairwise correlation matrix."""
@@ -90,8 +90,8 @@ def rolling_correlation_to_market(
     return pd.DataFrame(result, index=returns.index)
 
 
-
 #  Drawdown analysis
+
 
 def drawdown(prices: pd.DataFrame) -> pd.DataFrame:
     """
@@ -129,8 +129,8 @@ def drawdown_duration(prices: pd.DataFrame) -> pd.Series:
     return pd.Series(durations)
 
 
-
 #  Risk metrics
+
 
 def sharpe_ratio(
     returns: pd.DataFrame,
@@ -202,7 +202,9 @@ def cvar(
     masked: pd.DataFrame = returns.where(returns <= var)
     return masked.mean()
 
+
 #  Summary statistics
+
 
 def summary_stats(
     returns: pd.DataFrame,
